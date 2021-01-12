@@ -8,9 +8,11 @@ Created on Tue Jan 12 12:04:02 2021
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+# from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 import os
-from mpl_toolkits.basemap import Basemap
+# from mpl_toolkits.basemap import Basemap
+import cartopy.crs as ccrs
+import cartopy
 
 # CARRA grid
 # Lambert_Conformal()
@@ -35,37 +37,52 @@ font_size=18
 plt.rcParams['axes.facecolor'] = 'k'
 plt.rcParams['axes.edgecolor'] = 'k'
 plt.rcParams["font.size"] = font_size
-max_value=6000
+max_value=2000*3
 
 # for a later version that maps the result
 ni=1269
 nj=1069
 
-map_version=0 # 0 for simple raster map, 1 for projected map
+map_version=1 # 0 for simple raster map, 1 for projected map
     
 if map_version:
     fn='./ancil/lat_1269x1069.numpy.bin'
     lat=np.fromfile(fn, dtype=float, count=-1, sep='', offset=0)
-    # lat=lat.reshape(ni, nj)
+    lat=lat.reshape(ni, nj)
 
     fn='./ancil/lon_1269x1069.numpy.bin'
     lon=np.fromfile(fn, dtype=float, count=-1, sep='', offset=0)
-    # lon=lon.reshape(ni, nj)
+    lon=lon.reshape(ni, nj)
 
-    # f = plt.figure(figsize=(8,4))
-    
-    # 57.31100000000001 79.52600000000001
-    # -56.76 33.255
-    
-    # 79.391 57.363
-    # -104.62700000000001 -14.544
+
     
     # m = Basemap(llcrnrlon=-55, llcrnrlat=55.8, urcrnrlon=80, urcrnrlat=80, lat_1=72, lat_0=72., lon_0=-36, resolution='l', projection='lcc') # carlos' version
-    m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.363, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
-    x, y = m(lat, lon)
+    # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.363, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
+    # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.311, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
+    
+    plt.figure()
+    # f = plt.figure(figsize=(8,4))
+    ax = plt.subplot(111, projection=ccrs.NorthPolarStereo())
+    
+    # # voir https://epsg.io/2154, cliquer sur proj.4
+    # proj4_params = "+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 " + \
+    #            "+y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+    
+    # # Ne sert à rien si ce n'est à vérifier que le format est correct.    
+    # import pyproj
+    # lambert93 = pyproj.Proj(proj4_params)
+
+    m = ccrs.LambertConformal(central_longitude = -36, central_latitude = 72.)
+    # Système de coordonnées de cartopy.
+    # proj4_list = [(k, v) for k,v in map(parse_option_pyproj, proj4_params.split())]
+    # crs_lambert93 = MyCRS(proj4_list, globe=None)
+    
+    # print('UL',lat[0,0],lon[0,0])
+    print('LL',lat[ni-1,0],lon[ni-1,0])
+    print('UR',lat[0,nj-1],lon[0,nj-1])
+    # x, y = m(lat, lon)
     # m.fillcontinents(color='coral',lake_color='aqua')
     # draw parallels and meridians.
-
 
 # read data
 year='2016'
@@ -74,13 +91,21 @@ fn='./grids_to_map/tp_2.5km_CARRA_'+year+'.npy'
 tot=np.fromfile(fn, dtype=np.float32)#, count=-1, sep='', offset=0)
 tot=tot.reshape(ni, nj)
 
+plt.imshow(tot,  origin='upper', transform=m)#,zorder=1)#, extent=(-56.76, 33.255, 57.311, 79.526), transform=ccrs.PlateCarree())
+ax.add_feature(cartopy.feature.LAND, transform=m)#, zorder=10,color='w')
+
+#%%
 # custom color table, after https://www.dropbox.com/s/xvntyqnyulmd02c/Box_et_al_2004_JGR.pdf?dl=0
 r=[188,108,76,0,      172,92,0,0,      255,255,255,220, 204,172,140,108, 255,255,255,236, 212,188,164,156, 255, 255]
 g=[255,255,188,124, 255,255,220,156, 255,188,156,124,  156,124,92,60,   188,140,72,0,    148,124,68,28, 255, 255 ]
 b=[255,255,255,255,  172,92,0,0,      172,60,0,0,       156,124,92,60,   220,196,164,0,  255,255,255,196, 0, 200 ]
+r=[188,108,76,0,      172,92,0,0,      255,255,255,220, 204,172,140,108, 255,255,255,236, 212,188,164,156]
+g=[255,255,188,124, 255,255,220,156, 255,188,156,124,  156,124,92,60,   188,140,72,0,    148,124,68,28]
+b=[255,255,255,255,  172,92,0,0,      172,60,0,0,       156,124,92,60,   220,196,164,0,  255,255,255,196]
 # ranges=[0,40,80,160,320,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000,2100,2200,2300,2400]
 colors = np.array([r, g, b]).T / 255
-n_bin = 28
+n_bin = 24
+# n_bin = 280
 cmap_name = 'my_list'
 # Create the colormap
 cm = LinearSegmentedColormap.from_list(
