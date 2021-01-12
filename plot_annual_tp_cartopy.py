@@ -8,7 +8,7 @@ Created on Tue Jan 12 12:04:02 2021
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
-# from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 import os
 # from mpl_toolkits.basemap import Basemap
 import cartopy.crs as ccrs
@@ -26,9 +26,9 @@ import cartopy
 #     longitudeOfFirstGridPointInDegrees: 302.903
 #     latitudeOfFirstGridPointInDegrees: 55.81
 
-AW=0
+AW=1
 path='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/'
-if AW:path='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/'
+if AW:path='C:/Users/Pascal/Desktop/GEUS_2019/SICE_AW_JEB/SICE_AW_JEB/map_CARRA_west/'
 os.chdir(path)
 
 # global plot settings
@@ -62,7 +62,15 @@ if map_version:
     
     plt.figure()
     # f = plt.figure(figsize=(8,4))
-    ax = plt.subplot(111, projection=ccrs.NorthPolarStereo())
+    m = ccrs.LambertConformal(central_longitude = -36, central_latitude = 72.)
+    img_extent = (-56.76, 33.255, 57.311, 79.526)
+    
+    # obtained with e.g.:
+    # m.transform_point(src_crs=ccrs.PlateCarree(), x=33.255, y=79.526)
+    img_extent = (-1305936.576584626, 1913601.457154332, 
+                  -1704450.4812351097, 1907398.010098368)
+    
+    ax = plt.subplot(111, projection=m)
     
     # # voir https://epsg.io/2154, cliquer sur proj.4
     # proj4_params = "+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 " + \
@@ -72,7 +80,6 @@ if map_version:
     # import pyproj
     # lambert93 = pyproj.Proj(proj4_params)
 
-    m = ccrs.LambertConformal(central_longitude = -36, central_latitude = 72.)
     # Système de coordonnées de cartopy.
     # proj4_list = [(k, v) for k,v in map(parse_option_pyproj, proj4_params.split())]
     # crs_lambert93 = MyCRS(proj4_list, globe=None)
@@ -91,8 +98,12 @@ fn='./grids_to_map/tp_2.5km_CARRA_'+year+'.npy'
 tot=np.fromfile(fn, dtype=np.float32)#, count=-1, sep='', offset=0)
 tot=tot.reshape(ni, nj)
 
-plt.imshow(tot,  origin='upper', transform=m)#,zorder=1)#, extent=(-56.76, 33.255, 57.311, 79.526), transform=ccrs.PlateCarree())
-ax.add_feature(cartopy.feature.LAND, transform=m)#, zorder=10,color='w')
+# plt.imshow(tot, extent=img_extent, aspect='auto')#,zorder=1)#, extent=(-56.76, 33.255, 57.311, 79.526), transform=ccrs.PlateCarree())
+plt.figure()
+ax = plt.subplot(111, projection=ccrs.NorthPolarStereo())
+ax.contourf(lon, lat, tot, aspect='auto', transform=ccrs.PlateCarree())
+ax.coastlines(resolution='50m', color='black', linewidth=1)
+
 
 #%%
 # custom color table, after https://www.dropbox.com/s/xvntyqnyulmd02c/Box_et_al_2004_JGR.pdf?dl=0
