@@ -46,11 +46,11 @@ nj=1069
 map_version=1 # 0 for simple raster map, 1 for projected map
     
 if map_version:
-    fn='./ancil/lat_1269x1069.numpy.bin'
+    fn='./ancil/2.5km_CARRA_west_lat_1069.npy'
     lat=np.fromfile(fn, dtype=float, count=-1, sep='', offset=0)
     lat=lat.reshape(ni, nj)
 
-    fn='./ancil/lon_1269x1069.numpy.bin'
+    fn='./ancil/2.5km_CARRA_west_lon_1269.npy'
     lon=np.fromfile(fn, dtype=float, count=-1, sep='', offset=0)
     lon=lon.reshape(ni, nj)
 
