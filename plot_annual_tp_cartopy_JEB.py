@@ -5,6 +5,7 @@ Created on Tue Jan 12 12:04:02 2021
 
 @author: jeb and AW
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
@@ -26,9 +27,15 @@ import cartopy
 #     longitudeOfFirstGridPointInDegrees: 302.903
 #     latitudeOfFirstGridPointInDegrees: 55.81
 
+<<<<<<< HEAD:plot_annual_tp_cartopy_JEB.py
+
+AW=0
+
+=======
 <<<<<<< HEAD
 AW=0
 =======
+>>>>>>> 78f58c2f018560240852ce919a7350f8396915a3:plot_annual_tp_cartopy_JEB.py
 def lon360_to_lon180(lon360):
 
     #reduce the angle  
@@ -42,9 +49,14 @@ def lon360_to_lon180(lon360):
     
     return lon180
 
+#between 180° and 360° 360 becomes 0
 
 AW=1
+<<<<<<< HEAD:plot_annual_tp_cartopy_JEB.py
+
+=======
 >>>>>>> 40bf2367a260f05d7335bee5ca3b9aea9edaf9e0
+>>>>>>> 78f58c2f018560240852ce919a7350f8396915a3:plot_annual_tp_cartopy_JEB.py
 path='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/'
 if AW:path='C:/Users/Pascal/Desktop/GEUS_2019/SICE_AW_JEB/SICE_AW_JEB/map_CARRA_west/'
 os.chdir(path)
@@ -64,7 +76,11 @@ nj=1069
 map_version=1 # 0 for simple raster map, 1 for projected map
     
 if map_version:
+<<<<<<< HEAD:plot_annual_tp_cartopy_JEB.py
+
+=======
 <<<<<<< HEAD
+>>>>>>> 78f58c2f018560240852ce919a7350f8396915a3:plot_annual_tp_cartopy_JEB.py
     fn='./ancil/2.5km_CARRA_west_lat_1269x1069.npy'
     lat=np.fromfile(fn, dtype=np.float32)
     lat=lat.reshape(ni, nj)
@@ -77,7 +93,11 @@ if map_version:
     print("min max lon",np.min(lon),np.max(lon))
     plt.imshow(np.rot90(lat.T)+30.953068)
     plt.colorbar()    
+<<<<<<< HEAD:plot_annual_tp_cartopy_JEB.py
+
 =======
+=======
+>>>>>>> 78f58c2f018560240852ce919a7350f8396915a3:plot_annual_tp_cartopy_JEB.py
     
     fn='./ancil/2.5km_CARRA_west_lat_1269x1069.npy'
     lat=np.fromfile(fn, dtype=np.float32, count=-1, sep='', offset=0)
@@ -87,13 +107,18 @@ if map_version:
     lon=np.fromfile(fn, dtype=np.float32, count=-1, sep='', offset=0)
     lon=lon.reshape(ni, nj)
     
-    lat_to_add = 55.81 - np.nanmin(lat)
+    # lat_to_add = 55.81 - np.nanmin(lat)
     lat = lat[::-1]
-    lat += lat_to_add
+    # lat += lat_to_add
     
-    lon = lon360_to_lon180(lon)
+    # lon = lon360_to_lon180(lon)
+    lon -= 360
     
+<<<<<<< HEAD:plot_annual_tp_cartopy_JEB.py
+
+=======
 >>>>>>> 40bf2367a260f05d7335bee5ca3b9aea9edaf9e0
+>>>>>>> 78f58c2f018560240852ce919a7350f8396915a3:plot_annual_tp_cartopy_JEB.py
     # m = Basemap(llcrnrlon=-55, llcrnrlat=55.8, urcrnrlon=80, urcrnrlat=80, lat_1=72, lat_0=72., lon_0=-36, resolution='l', projection='lcc') # carlos' version
     # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.363, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
     # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.311, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
@@ -143,9 +168,9 @@ img_extent = (np.nanmin(lon) , np.nanmax(lon),
                   np.nanmin(lat), np.nanmax(lat))
 plt.figure()
 ax = plt.subplot(111, projection=ccrs.PlateCarree())
-# plt.imshow(tot, extent=img_extent, aspect='auto', transform=ccrs.PlateCarree(),
-#            origin='upper')
-ax.contourf(lon, lat, tot, aspect='auto', transform=ccrs.PlateCarree())
+plt.imshow(tot, extent=img_extent, aspect='auto', transform=ccrs.PlateCarree(),
+           origin='upper')
+# ax.contourf(lon, lat, tot, aspect='auto', transform=ccrs.PlateCarree())
 ax.coastlines(resolution='50m', color='black', linewidth=1)
 
 
