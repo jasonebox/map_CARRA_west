@@ -68,13 +68,13 @@ print(fh.variables)
 #%%
 wo=1
 if wo:
-    ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_lat_1269x1069.npy'
-    lat.astype('float32').tofile(ofile)
-    ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_lon_1269x1069.npy'
-    lon.astype('float32').tofile(ofile)
-    ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_x_1269x1069.npy'
+    # ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_lat_1269x1069.npy'
+    # lat.astype('float32').tofile(ofile)
+    # ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_lon_1269x1069.npy'
+    # lon.astype('float32').tofile(ofile)
+    ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_x_1069.npy'
     x.astype('float32').tofile(ofile)        
-    ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_y_1269x1069.npy'
+    ofile='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/ancil/2.5km_CARRA_west_y_1269.npy'
     y.astype('float32').tofile(ofile)   
 
 
