@@ -26,7 +26,7 @@ import cartopy
 #     longitudeOfFirstGridPointInDegrees: 302.903
 #     latitudeOfFirstGridPointInDegrees: 55.81
 
-AW=1
+AW=0
 path='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/'
 if AW:path='C:/Users/Pascal/Desktop/GEUS_2019/SICE_AW_JEB/SICE_AW_JEB/map_CARRA_west/'
 os.chdir(path)
@@ -46,16 +46,18 @@ nj=1069
 map_version=1 # 0 for simple raster map, 1 for projected map
     
 if map_version:
-    fn='./ancil/2.5km_CARRA_west_lat_1069.npy'
-    lat=np.fromfile(fn, dtype=float, count=-1, sep='', offset=0)
+    fn='./ancil/2.5km_CARRA_west_lat_1269x1069.npy'
+    lat=np.fromfile(fn, dtype=np.float32)
     lat=lat.reshape(ni, nj)
 
-    fn='./ancil/2.5km_CARRA_west_lon_1269.npy'
-    lon=np.fromfile(fn, dtype=float, count=-1, sep='', offset=0)
+    fn='./ancil/2.5km_CARRA_west_lon_1269x1069.npy'
+    lon=np.fromfile(fn, dtype=np.float32)
     lon=lon.reshape(ni, nj)
 
-
-    
+    print("min max lat",np.min(lat),np.max(lat))
+    print("min max lon",np.min(lon),np.max(lon))
+    plt.imshow(np.rot90(lat.T)+30.953068)
+    plt.colorbar()    
     # m = Basemap(llcrnrlon=-55, llcrnrlat=55.8, urcrnrlon=80, urcrnrlat=80, lat_1=72, lat_0=72., lon_0=-36, resolution='l', projection='lcc') # carlos' version
     # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.363, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
     # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.311, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
