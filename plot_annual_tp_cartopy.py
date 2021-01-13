@@ -69,8 +69,10 @@ if map_version:
     lon=np.fromfile(fn, dtype=np.float32, count=-1, sep='', offset=0)
     lon=lon.reshape(ni, nj)
     
+    lat_to_add = 55.81 - np.nanmin(lat)
     lat = lat[::-1]
-    lat += np.nanmin(lat)
+    lat += lat_to_add
+    
     lon = lon360_to_lon180(lon)
     
     # m = Basemap(llcrnrlon=-55, llcrnrlat=55.8, urcrnrlon=80, urcrnrlat=80, lat_1=72, lat_0=72., lon_0=-36, resolution='l', projection='lcc') # carlos' version
