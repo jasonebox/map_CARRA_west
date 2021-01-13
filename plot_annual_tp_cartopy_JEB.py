@@ -26,7 +26,25 @@ import cartopy
 #     longitudeOfFirstGridPointInDegrees: 302.903
 #     latitudeOfFirstGridPointInDegrees: 55.81
 
+<<<<<<< HEAD
 AW=0
+=======
+def lon360_to_lon180(lon360):
+
+    #reduce the angle  
+    lon180 =  lon360 % 360 
+    
+    #force it to be the positive remainder, so that 0 <= angle < 360  
+    lon180 = (lon180 + 360) % 360;  
+    
+    #force into the minimum absolute value residue class, so that -180 < angle <= 180  
+    lon180[lon180 > 180] -= 360
+    
+    return lon180
+
+
+AW=1
+>>>>>>> 40bf2367a260f05d7335bee5ca3b9aea9edaf9e0
 path='/Users/jason/Dropbox/CARRA/prog/map_CARRA_west/'
 if AW:path='C:/Users/Pascal/Desktop/GEUS_2019/SICE_AW_JEB/SICE_AW_JEB/map_CARRA_west/'
 os.chdir(path)
@@ -46,6 +64,7 @@ nj=1069
 map_version=1 # 0 for simple raster map, 1 for projected map
     
 if map_version:
+<<<<<<< HEAD
     fn='./ancil/2.5km_CARRA_west_lat_1269x1069.npy'
     lat=np.fromfile(fn, dtype=np.float32)
     lat=lat.reshape(ni, nj)
@@ -58,21 +77,39 @@ if map_version:
     print("min max lon",np.min(lon),np.max(lon))
     plt.imshow(np.rot90(lat.T)+30.953068)
     plt.colorbar()    
+=======
+    
+    fn='./ancil/2.5km_CARRA_west_lat_1269x1069.npy'
+    lat=np.fromfile(fn, dtype=np.float32, count=-1, sep='', offset=0)
+    lat=lat.reshape(ni, nj)
+
+    fn='./ancil/2.5km_CARRA_west_lon_1269x1069.npy'
+    lon=np.fromfile(fn, dtype=np.float32, count=-1, sep='', offset=0)
+    lon=lon.reshape(ni, nj)
+    
+    lat_to_add = 55.81 - np.nanmin(lat)
+    lat = lat[::-1]
+    lat += lat_to_add
+    
+    lon = lon360_to_lon180(lon)
+    
+>>>>>>> 40bf2367a260f05d7335bee5ca3b9aea9edaf9e0
     # m = Basemap(llcrnrlon=-55, llcrnrlat=55.8, urcrnrlon=80, urcrnrlat=80, lat_1=72, lat_0=72., lon_0=-36, resolution='l', projection='lcc') # carlos' version
     # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.363, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
     # m = Basemap(llcrnrlon=-56.76, llcrnrlat=57.311, urcrnrlon=33.255, urcrnrlat=79.526, lat_0=72, lon_0=-36, resolution='l', projection='lcc')
     
-    plt.figure()
+    #plt.figure()
     # f = plt.figure(figsize=(8,4))
     m = ccrs.LambertConformal(central_longitude = -36, central_latitude = 72.)
-    img_extent = (-56.76, 33.255, 57.311, 79.526)
+    # img_extent = (-56.76, 33.255, 57.311, 79.526)
     
     # obtained with e.g.:
     # m.transform_point(src_crs=ccrs.PlateCarree(), x=33.255, y=79.526)
     img_extent = (-1305936.576584626, 1913601.457154332, 
                   -1704450.4812351097, 1907398.010098368)
     
-    ax = plt.subplot(111, projection=m)
+    
+    #ax = plt.subplot(111, projection=m)
     
     # # voir https://epsg.io/2154, cliquer sur proj.4
     # proj4_params = "+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 " + \
@@ -100,9 +137,14 @@ fn='./grids_to_map/tp_2.5km_CARRA_'+year+'.npy'
 tot=np.fromfile(fn, dtype=np.float32)#, count=-1, sep='', offset=0)
 tot=tot.reshape(ni, nj)
 
+# %%
 # plt.imshow(tot, extent=img_extent, aspect='auto')#,zorder=1)#, extent=(-56.76, 33.255, 57.311, 79.526), transform=ccrs.PlateCarree())
+img_extent = (np.nanmin(lon) , np.nanmax(lon),
+                  np.nanmin(lat), np.nanmax(lat))
 plt.figure()
-ax = plt.subplot(111, projection=ccrs.NorthPolarStereo())
+ax = plt.subplot(111, projection=ccrs.PlateCarree())
+# plt.imshow(tot, extent=img_extent, aspect='auto', transform=ccrs.PlateCarree(),
+#            origin='upper')
 ax.contourf(lon, lat, tot, aspect='auto', transform=ccrs.PlateCarree())
 ax.coastlines(resolution='50m', color='black', linewidth=1)
 
